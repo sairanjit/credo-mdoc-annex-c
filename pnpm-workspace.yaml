@@ -6,3 +6,6 @@ onlyBuiltDependencies:
   - '@2060.io/ffi-napi'
   - '@2060.io/ref-napi'
   - '@openwallet-foundation/askar-nodejs'
+
+patchedDependencies:
+  '@credo-ts/core@0.6.2': patches/@credo-ts__core@0.6.2.patch

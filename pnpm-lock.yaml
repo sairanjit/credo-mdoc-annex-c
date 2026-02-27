@@ -4,19 +4,21 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@credo-ts/core@0.6.2':
+    hash: f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba
+    path: patches/@credo-ts__core@0.6.2.patch
+
 importers:
 
   .:
     dependencies:
-      '@animo-id/mdoc':
-        specifier: ^0.5.2
-        version: 0.5.2
       '@credo-ts/askar':
         specifier: ^0.6.2
         version: 0.6.2(@openwallet-foundation/askar-shared@0.4.3)(typescript@5.9.3)
       '@credo-ts/core':
         specifier: ^0.6.2
-        version: 0.6.2(typescript@5.9.3)
+        version: 0.6.2(patch_hash=f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba)(typescript@5.9.3)
       '@credo-ts/node':
         specifier: ^0.6.2
         version: 0.6.2(typescript@5.9.3)
@@ -1205,7 +1207,7 @@ snapshots:
 
   '@credo-ts/askar@0.6.2(@openwallet-foundation/askar-shared@0.4.3)(typescript@5.9.3)':
     dependencies:
-      '@credo-ts/core': 0.6.2(typescript@5.9.3)
+      '@credo-ts/core': 0.6.2(patch_hash=f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba)(typescript@5.9.3)
       '@openwallet-foundation/askar-shared': 0.4.3
       class-transformer: 0.5.1
       class-validator: 0.14.4
@@ -1216,7 +1218,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/core@0.6.2(typescript@5.9.3)':
+  '@credo-ts/core@0.6.2(patch_hash=f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba)(typescript@5.9.3)':
     dependencies:
       '@animo-id/mdoc': 0.5.2
       '@animo-id/pex': 6.1.1
@@ -1267,7 +1269,7 @@ snapshots:
 
   '@credo-ts/didcomm@0.6.2(typescript@5.9.3)':
     dependencies:
-      '@credo-ts/core': 0.6.2(typescript@5.9.3)
+      '@credo-ts/core': 0.6.2(patch_hash=f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba)(typescript@5.9.3)
       class-transformer: 0.5.1
       class-validator: 0.14.4
       luxon: 3.7.2
@@ -1280,7 +1282,7 @@ snapshots:
 
   '@credo-ts/node@0.6.2(typescript@5.9.3)':
     dependencies:
-      '@credo-ts/core': 0.6.2(typescript@5.9.3)
+      '@credo-ts/core': 0.6.2(patch_hash=f42ba7a5bfcd3b98e5652987fe08a01c7dede5ad295c564268f1218e628afeba)(typescript@5.9.3)
       '@credo-ts/didcomm': 0.6.2(typescript@5.9.3)
       '@types/express': 5.0.6
       express: 5.2.1
