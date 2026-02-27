@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DC API Test Client</title>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --text: #1d2433;
+        --muted: #5f6b7f;
+        --accent: #0d6efd;
+        --border: #d9e0ee;
+        --success: #198754;
+        --error: #dc3545;
+      }
+      * {
+        box-sizing: border-box;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 22px;
+      }
+      p {
+        margin: 0 0 20px;
+        color: var(--muted);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      label {
+        display: block;
+        margin: 10px 0 6px;
+        font-size: 13px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+      }
+      textarea {
+        min-height: 110px;
+        resize: vertical;
+      }
+      button {
+        margin-top: 12px;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 14px;
+        cursor: pointer;
+      }
+      pre {
+        margin: 10px 0 0;
+        background: #0c1220;
+        color: #d7e5ff;
+        padding: 12px;
+        border-radius: 8px;
+        overflow: auto;
+        font-size: 12px;
+      }
+      .status {
+        margin-top: 12px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: bold;
+      }
+      .status.success {
+        background: #d1e7dd;
+        color: var(--success);
+      }
+      .status.error {
+        background: #f8d7da;
+        color: var(--error);
+      }
+      .status.hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>DC API Endpoint Tester</h1>
+      <p>Uses <code>/dc-api/request</code> and <code>/dc-api/verify</code> on this server.</p>
+
+      <div class="grid">
+        <section class="card">
+          <h2>1) Create Request</h2>
+
+          <label for="documentRequests">documentRequests (JSON array)</label>
+          <textarea id="documentRequests">
+[
+  {
+    "docType": "org.iso.18013.5.1.mDL",
+    "nameSpaces": {
+      "org.iso.18013.5.1": {
+        "family_name": true,
+        "given_name": true,
+        "birth_date": true,
+        "issue_date": true
+      }
+    }
+  }
+]
+          </textarea>
+
+          <label for="origin">origin (optional)</label>
+          <input id="origin" />
+
+          <button id="createBtn">Request Credential</button>
+          <pre id="createOut"></pre>
+        </section>
+
+        <section class="card">
+          <h2>2) Verification Result</h2>
+          <div id="verifyStatus" class="status hidden"></div>
+          <pre id="verifyOut"></pre>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id)
+      ;(() => {
+        const origin = window.location.origin
+        if (!$('origin').value) $('origin').value = origin
+      })()
+
+      function parseJsonField(id, required) {
+        const raw = $(id).value.trim()
+        if (!raw) {
+          if (required) throw new Error(id + ' is required')
+          return undefined
+        }
+        return JSON.parse(raw)
+      }
+
+      function setOut(id, value) {
+        $(id).textContent = typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+      }
+
+      function setVerifyStatus(success, message) {
+        const el = $('verifyStatus')
+        el.className = `status ${success ? 'success' : 'error'}`
+        el.textContent = message
+      }
+
+      function tryParseJsonString(value) {
+        if (typeof value !== 'string') return null
+        const text = value.trim()
+        if (!text.startsWith('{') && !text.startsWith('[')) return null
+        try {
+          return JSON.parse(text)
+        } catch {
+          return null
+        }
+      }
+
+      function deepFindString(obj, keys) {
+        if (!obj || typeof obj !== 'object') return null
+
+        for (const key of keys) {
+          const value = obj[key]
+          if (typeof value === 'string' && value.length > 0) return value
+        }
+
+        if (Array.isArray(obj)) {
+          for (const item of obj) {
+            const found = deepFindString(item, keys)
+            if (found) return found
+          }
+          return null
+        }
+
+        for (const value of Object.values(obj)) {
+          if (value && typeof value === 'object') {
+            const found = deepFindString(value, keys)
+            if (found) return found
+          }
+        }
+
+        return null
+      }
+
+      function extractEncryptedResponseFromCredentialResponse(credentialResponse) {
+        const keys = ['Response', 'response', 'encryptedResponse', 'deviceResponse']
+        const data = credentialResponse?.data
+
+        if (typeof data === 'string') {
+          const parsed = tryParseJsonString(data)
+          if (parsed) {
+            const fromParsed = deepFindString(parsed, keys)
+            if (fromParsed) return fromParsed
+          }
+          return data
+        }
+
+        if (data && typeof data === 'object') {
+          const fromData = deepFindString(data, keys)
+          if (fromData) return fromData
+        }
+
+        const fromTop = deepFindString(credentialResponse, keys)
+        if (fromTop) return fromTop
+
+        return null
+      }
+
+      function extractEncryptionInfoFromCredentialResponse(credentialResponse) {
+        const keys = ['encryptionInfoBase64Url', 'encryptionInfo']
+        const data = credentialResponse?.data
+
+        if (typeof data === 'string') {
+          const parsed = tryParseJsonString(data)
+          if (parsed) {
+            const fromParsed = deepFindString(parsed, keys)
+            if (fromParsed) return fromParsed
+          }
+        }
+
+        if (data && typeof data === 'object') {
+          const fromData = deepFindString(data, keys)
+          if (fromData) return fromData
+        }
+
+        const fromTop = deepFindString(credentialResponse, keys)
+        if (fromTop) return fromTop
+
+        return null
+      }
+
+      async function callVerify(body) {
+        const res = await fetch('/dc-api/verify', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+        const data = await res.json()
+        if (res.ok && !data.error) {
+          setVerifyStatus(true, 'Verification successful')
+        } else {
+          setVerifyStatus(false, `Verification failed: ${data.error ?? 'Unknown error'}`)
+        }
+        setOut('verifyOut', data)
+        return data
+      }
+
+      $('createBtn').addEventListener('click', async () => {
+        try {
+          $('verifyStatus').className = 'status hidden'
+          setOut('verifyOut', '')
+
+          const body = {
+            documentRequests: parseJsonField('documentRequests', true),
+            origin: $('origin').value.trim() || undefined,
+          }
+
+          const res = await fetch('/dc-api/request', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+          const data = await res.json()
+          setOut('createOut', data)
+
+          if (data.sessionId && data.dcRequestProtocol && data.dcRequestString && navigator.credentials?.get) {
+            try {
+              const requestData = JSON.parse(data.dcRequestString)
+              const credentialResponse = await navigator.credentials.get({
+                digital: {
+                  requests: [{ protocol: data.dcRequestProtocol, data: requestData }],
+                },
+                mediation: 'required',
+              })
+
+              const encryptedResponse = extractEncryptedResponseFromCredentialResponse(credentialResponse)
+              const encryptionInfoBase64Url = extractEncryptionInfoFromCredentialResponse(credentialResponse)
+
+              if (encryptedResponse) {
+                await callVerify({
+                  sessionId: data.sessionId,
+                  encryptedResponse,
+                  encryptionInfoBase64Url,
+                  origin: $('origin').value.trim() || undefined,
+                })
+              } else {
+                setVerifyStatus(false, 'No encrypted response found in wallet response')
+                setOut('verifyOut', {
+                  error: 'Credential response received but no encrypted response found',
+                  credentialResponsePreview: credentialResponse,
+                })
+              }
+            } catch (err) {
+              setVerifyStatus(false, `Credential request failed: ${String(err)}`)
+              setOut('verifyOut', { error: `Credential request failed: ${String(err)}` })
+            }
+          } else if (data.dcRequestProtocol && data.dcRequestString) {
+            setVerifyStatus(false, 'Digital Credentials API not available in this browser')
+            setOut('verifyOut', {
+              error: 'Digital Credentials API is not available in this browser. Enable it and retry.',
+            })
+          }
+        } catch (error) {
+          setOut('createOut', { error: String(error) })
+        }
+      })
+    </script>
+  </body>
+</html>

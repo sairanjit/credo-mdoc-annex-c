@@ -1,0 +1,25 @@
+{
+  "name": "test-dc-api-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx src/server.ts"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@credo-ts/askar": "^0.6.2",
+    "@credo-ts/core": "^0.6.2",
+    "@credo-ts/node": "^0.6.2",
+    "@hono/node-server": "^1.19.9",
+    "@openwallet-foundation/askar-nodejs": "^0.4.3",
+    "hono": "^4.11.9",
+    "hpke-js": "^1.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "tsx": "^4.21.0",
+    "typescript": "~5.9.3"
+  },
+  "packageManager": "pnpm@10.22.0"
+}
