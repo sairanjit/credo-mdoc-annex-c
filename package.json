@@ -14,7 +14,7 @@
     "@hono/node-server": "^1.19.9",
     "@openwallet-foundation/askar-nodejs": "^0.4.3",
     "hono": "^4.11.9",
-    "hpke-js": "^1.6.5"
+    "hpke-js": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",

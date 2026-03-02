@@ -32,8 +32,8 @@ importers:
         specifier: ^4.11.9
         version: 4.12.3
       hpke-js:
-        specifier: ^1.6.5
-        version: 1.6.5
+        specifier: ^1.7.0
+        version: 1.7.0
     devDependencies:
       '@types/node':
         specifier: ^20.11.17
@@ -272,20 +272,20 @@ packages:
     resolution: {integrity: sha512-Zp8IwRIkdCucu877wCNqDp3B8yOhAnAah/YDDkO94pPr/KKV7IGnBbpwIjDB3BsAySWBMrhhdE0JKYw3N4FCag==}
     engines: {node: '>=16.0.0'}
 
-  '@hpke/common@1.8.1':
-    resolution: {integrity: sha512-PSI4QSxH8XDli0TqAsWycVfrLLCM/bBe+hVlJwtuJJiKIvCaFS3CXX/WtRfJceLJye9NHc2J7GvHVCY9B1BEbA==}
+  '@hpke/common@1.9.0':
+    resolution: {integrity: sha512-Sdxj4KqtmBt8FiwRkNLxXF+peqLR3FwVxtnsemiiEzClgslckRpFv3yK8mchoCwvyRwLOMS3Y2Z9ND2bq3sRVg==}
     engines: {node: '>=16.0.0'}
 
-  '@hpke/core@1.7.5':
-    resolution: {integrity: sha512-4xfckZuPaIodeu0HpuTRIdtmajhRHXM/6rjS2N62Ns9aOCkGbbeYRwktqR3bUScuhCwyEBsEQqtIh9f0iLP3WQ==}
+  '@hpke/core@1.8.0':
+    resolution: {integrity: sha512-yHuo+2q4HSPUFuxcg87Kiy7QZRk4IeR+cwBB0qW8fHnr71bnRCArM39Cq1bWHBt75gTyeERGD/v1H14yPB2wyw==}
     engines: {node: '>=16.0.0'}
 
-  '@hpke/dhkem-x25519@1.6.4':
-    resolution: {integrity: sha512-TTkZ3hjMDO6TweSTSAN/qL30WubOXJXTe/1eNL4cprlGokcjJq3SldcePI2BbC1eOYq903N1X6zwDjVG5OelfA==}
+  '@hpke/dhkem-x25519@1.7.0':
+    resolution: {integrity: sha512-mgqkCUj82jBoKSa55VG/QAih4d5npalRd3uu/U/t3PvvrSbrYjDnok6PDxFwRPh+9aUNRX0tBtxupqtAiT+P1A==}
     engines: {node: '>=16.0.0'}
 
-  '@hpke/dhkem-x448@1.6.4':
-    resolution: {integrity: sha512-xyR4SqS4MjDmQIrIQmqPWLNgwM6Ul6G8UWQsFKZw6PLv8pxVk1nYj2WJrdZ+Ecs9+qY/NYQItv8KVMXge3gFKQ==}
+  '@hpke/dhkem-x448@1.7.0':
+    resolution: {integrity: sha512-12Qik0A5srTp5D2RbwYorF4OyJePN2Ccej8pM45VbZampZdM6qFmZ2I3vWjUaOcN4L+CgP8U2uzq1g1dpc5MBw==}
     engines: {node: '>=16.0.0'}
 
   '@isaacs/fs-minipass@4.0.1':
@@ -771,8 +771,8 @@ packages:
     resolution: {integrity: sha512-SFsVSjp8sj5UumXOOFlkZOG6XS9SJDKw0TbwFeV+AJ8xlST8kxK5Z/5EYa111UY8732lK2S/xB653ceuaoGwpg==}
     engines: {node: '>=16.9.0'}
 
-  hpke-js@1.6.5:
-    resolution: {integrity: sha512-amUFmHr6Z16370Wn57lYOkl+gb3wDBUc0nyPlx9ODMTaJ09kAVY0MrOU7JCzJJjL0bN8nKPU5vfXLBRjCmREOw==}
+  hpke-js@1.7.0:
+    resolution: {integrity: sha512-Ix6O3U7XmCs6Jc+8NkvyxTvk2DXliwYZ8+fDNjOtXC769ypslNIDwMHucaoCDALSyqqr3/pnpDwDx7Icac/iCg==}
     engines: {node: '>=16.0.0'}
 
   http-errors@2.0.1:
@@ -1413,21 +1413,21 @@ snapshots:
 
   '@hpke/chacha20poly1305@1.7.1':
     dependencies:
-      '@hpke/common': 1.8.1
+      '@hpke/common': 1.9.0
 
-  '@hpke/common@1.8.1': {}
+  '@hpke/common@1.9.0': {}
 
-  '@hpke/core@1.7.5':
+  '@hpke/core@1.8.0':
     dependencies:
-      '@hpke/common': 1.8.1
+      '@hpke/common': 1.9.0
 
-  '@hpke/dhkem-x25519@1.6.4':
+  '@hpke/dhkem-x25519@1.7.0':
     dependencies:
-      '@hpke/common': 1.8.1
+      '@hpke/common': 1.9.0
 
-  '@hpke/dhkem-x448@1.6.4':
+  '@hpke/dhkem-x448@1.7.0':
     dependencies:
-      '@hpke/common': 1.8.1
+      '@hpke/common': 1.9.0
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -2052,13 +2052,13 @@ snapshots:
 
   hono@4.12.3: {}
 
-  hpke-js@1.6.5:
+  hpke-js@1.7.0:
     dependencies:
       '@hpke/chacha20poly1305': 1.7.1
-      '@hpke/common': 1.8.1
-      '@hpke/core': 1.7.5
-      '@hpke/dhkem-x25519': 1.6.4
-      '@hpke/dhkem-x448': 1.6.4
+      '@hpke/common': 1.9.0
+      '@hpke/core': 1.8.0
+      '@hpke/dhkem-x25519': 1.7.0
+      '@hpke/dhkem-x448': 1.7.0
 
   http-errors@2.0.1:
     dependencies:
